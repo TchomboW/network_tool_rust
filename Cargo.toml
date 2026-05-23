@@ -1,0 +1,16 @@
+[package]
+name = "network_tool"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+surge-ping     = "0.8"
+hickory-resolver = { version = "0.24", features = ["tokio"] }
+reqwest        = { version = "0.12", features = ["json"] }
+tokio          = { version = "1", features = ["full"] }
+clap           = { version = "4", features = ["derive"] }
+ratatui        = "0.29"
+crossterm      = "0.28"
+chrono         = "0.4"
+anyhow         = "1"
+serde_json     = "1"
