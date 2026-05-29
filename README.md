@@ -9,6 +9,7 @@ A high-performance network diagnostic toolkit rewritten from [TchomboW/Network-D
 - **TCP Latency** — Port connectivity testing (e.g., HTTPS on 443) with millisecond precision
 - **HTTP TTFB** — Time-to-first-byte measurement via `reqwest` async HTTP client
 - **TUI Dashboard** — Real-time terminal dashboard using Ratatui + Crossterm, press `q` to quit
+- **Web UI** — Browser-based diagnostics dashboard with real-time API via Axum
 - **Async Architecture** — All diagnostics run concurrently via Tokio async runtime
 
 ## Quick Start
@@ -25,14 +26,21 @@ cargo build --release
 
 # TUI mode (real-time dashboard, updates every 5s)
 ./target/release/network_tool tui example.com --interval 5
+
+# Web UI mode (starts HTTP server at :3000)
+./target/release/network_tool --web :3000
+
+# Access in browser: http://localhost:3000
+# API endpoint: GET /api/diagnostics (returns JSON diagnostics)
 ```
 
 ## Project Structure
 
 ```
 src/
-├── main.rs          — CLI entry point (clap argument parsing)
+├── main.rs          — CLI/Web entry point (clap argument parsing)
 ├── models.rs        — Data structures: PingStats, DnsResult, TcpResult, HttpResult
+├── web_ui.rs        — Axum web server with /api/diagnostics endpoint
 ├── modules/
 │   ├── icmp.rs      — ICMP ping implementation (surge-ping)
 │   ├── dns.rs       — DNS resolution with cache (hickory-resolver)
@@ -46,15 +54,17 @@ src/
 
 ## Dependencies
 
-| Crate | Purpose |
+|| Crate | Purpose |
 |-------|---------|
-| `surge-ping` | ICMP ping implementation |
-| `hickory-resolver` | DNS resolution (successor to trust-dns) |
-| `reqwest` | Async HTTP client for TTFB measurement |
-| `ratatui` + `crossterm` | Terminal UI framework |
-| `clap` | Command-line argument parsing (derive API) |
-| `tokio` | Async runtime with multi-thread scheduler |
-| `anyhow` | Error handling with context |
+|| `surge-ping` | ICMP ping implementation |
+|| `hickory-resolver` | DNS resolution (successor to trust-dns) |
+|| `reqwest` | Async HTTP client for TTFB measurement |
+|| `axum` + `tower-http` | Web server and HTTP utilities |
+|| `ratatui` + `crossterm` | Terminal UI framework |
+|| `clap` | Command-line argument parsing (derive API) |
+|| `tokio` | Async runtime with multi-thread scheduler |
+|| `serde` + `serde_json` | Serialization/deserialization |
+|| `anyhow` | Error handling with context |
 
 ## Build Requirements
 
