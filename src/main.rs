@@ -10,6 +10,7 @@ mod utils {
     pub mod dns_cache;
     pub mod retry_middleware;
 }
+mod web_ui;
 
 use clap::Parser;
 use std::time::Duration;
@@ -45,6 +46,14 @@ struct Args {
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     let args = Args::parse();
+
+    if let Some(web_addr) = &args.web {
+        println!("Starting web server at {}", web_addr);
+        let app = web_ui::create_router();
+        let listener = tokio::net::TcpListener::bind(web_addr).await?;
+        axum::serve(listener, app).await?;
+        return Ok(());
+    }
 
     if args.tui {
         println!("Starting TUI mode...");
