@@ -1,5 +1,5 @@
 mod models;
-mod modules {
+pub mod modules {
     pub mod icmp;
     pub mod dns;
     pub mod tcp;
